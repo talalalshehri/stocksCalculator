@@ -1,57 +1,81 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+  <meta charset="utf-8">
+  <title>Bootswatch: Superhero</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://bootswatch.com/5/superhero/bootstrap.css">
+  <link rel="stylesheet" href="https://bootswatch.com/_vendor/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://bootswatch.com/_vendor/prismjs/themes/prism-okaidia.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+
+      $("#submit").click(function () {
+        $("#result").empty();
+        var money = $("#money").val();
+        var buyPrice = $("#buyPrice").val();
+        var sellPrice = $("#sellPrice").val();
+
+        var numberOfstocks = (money - money / 1000 * 1.74) / buyPrice;
+        $("#result").append('<p>numberOfstocks: ' + numberOfstocks + '</p>');
+
+        var buyTax = money / 1000 * 1.74;
+        $("#result").append('<p>BuyTax: ' + buyTax + '</p>');
+
+        var buyMoneyAfterTax = (money - money / 1000 * 1.74);
+        $("#result").append('<p>buyMoneyAfterTax: ' + buyMoneyAfterTax + '</p>');
+
+        var sellMoneyWithoutTax = numberOfstocks * sellPrice;
+        //$("#result").append('<p>sellMoneyWithoutTax: '+sellMoneyWithoutTax+'</p>');
+
+        var sellTax = sellMoneyWithoutTax / 1000 * 1.74;
+        $("#result").append('<p>SellTax: ' + sellTax + '</p>');
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
 
-$("#submit").click(function(){
-  $("#result").empty();
-  var money = $("#money").val();
-  var buyPrice = $("#buyPrice").val();
-  var sellPrice = $("#sellPrice").val();
+        var sellMoneyAfterTax = (sellMoneyWithoutTax - sellMoneyWithoutTax / 1000 * 1.74);
+        $("#result").append('<p>sellMoneyAfterTax: ' + sellMoneyAfterTax + '</p>');
 
-  var numberOfstocks = (money-money/1000*1.74)/buyPrice;
-  $("#result").append('<p>numberOfstocks: '+numberOfstocks+'</p>');
-  
-  var buyTax = money/1000*1.74;
-  $("#result").append('<p>BuyTax: '+buyTax+'</p>');
+        var totalTax = buyTax + sellTax;
+        $("#result").append('<p>totalTax: ' + totalTax + '</p>');
 
-  var buyMoneyAfterTax = (money-money/1000*1.74);
-  $("#result").append('<p>buyMoneyAfterTax: '+buyMoneyAfterTax+'</p>');
+        var earnings = sellMoneyAfterTax - buyMoneyAfterTax;
+        $("#result").append('<p>earnings: ' + earnings + '</p>');
 
-  var sellMoneyWithoutTax = numberOfstocks * sellPrice;
-  //$("#result").append('<p>sellMoneyWithoutTax: '+sellMoneyWithoutTax+'</p>');
 
-  var sellTax = sellMoneyWithoutTax/1000*1.74;
-  $("#result").append('<p>SellTax: '+sellTax+'</p>');
-
-  
-  
-  var sellMoneyAfterTax = (sellMoneyWithoutTax-sellMoneyWithoutTax/1000*1.74);
-  $("#result").append('<p>sellMoneyAfterTax: '+sellMoneyAfterTax+'</p>');
-  
-  var totalTax = buyTax + sellTax;
-      $("#result").append('<p>totalTax: '+totalTax+'</p>');
-
-    var earnings = sellMoneyAfterTax - buyMoneyAfterTax;
-    $("#result").append('<p>earnings: '+earnings+'</p>');
-	
-	
-});
-});
-</script>
+      });
+    });
+  </script>
 </head>
+
 <body>
-Money: <input id="money" type="number" /><br/><br/>
+  <div class="container">
+    <div class="page-header" id="banner">
+      <div class="row">
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <h2 style="padding-top:1em"> Stocks:</h2>
+        <form>
+        Money: <input class="form-control me-sm-2 form-control-lg"  id="money" type="number" /><br /><br />
 
-buy Price: <input id="buyPrice" type="number"/><br><br>
+        buy Price: <input class="form-control me-sm-2 form-control-lg"  id="buyPrice" type="number" /><br><br>
 
-sell Price: <input id="sellPrice" type="number"/><br><br>
-<input id="submit" type="button" value="Result"/>
-
-<h1 id="result"></h1>
+        sell Price: <input class="form-control me-sm-2 form-control-lg"  id="sellPrice" type="number" /><br><br>   
+        <p></p>
+        <button id="submit" type="button" class="form-control btn btn-primary  me-sm-2 form-control-lg">Primary</button>
+        <!-- <input class="form-control me-sm-2"  id="submit" type="button" value="Result" /> -->
+        <br />
+        <br />
+        <h1 id="result"></h1>
+      </form>
+      </div>
+    </div>
+  </div>
 </body>
+
 </html>
