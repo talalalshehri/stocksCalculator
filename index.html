@@ -19,8 +19,8 @@ $("#submit").click(function(){
   var buyTax = money/1000*1.74;
   $("#result").append('<p>BuyTax: '+buyTax+'</p>');
 
-  var buyMoneyWithTax = (money-money/1000*1.74);
-  $("#result").append('<p>buyMoneyWithTax: '+buyMoneyWithTax+'</p>');
+  var buyMoneyAfterTax = (money-money/1000*1.74);
+  $("#result").append('<p>buyMoneyAfterTax: '+buyMoneyAfterTax+'</p>');
 
   var sellMoneyWithoutTax = numberOfstocks * sellPrice;
   //$("#result").append('<p>sellMoneyWithoutTax: '+sellMoneyWithoutTax+'</p>');
@@ -30,13 +30,13 @@ $("#submit").click(function(){
 
   
   
-  var sellMoneyWithTax = (sellMoneyWithoutTax-sellMoneyWithoutTax/1000*1.74);
-  $("#result").append('<p>sellMoneyWithTax: '+sellMoneyWithTax+'</p>');
+  var sellMoneyAfterTax = (sellMoneyWithoutTax-sellMoneyWithoutTax/1000*1.74);
+  $("#result").append('<p>sellMoneyAfterTax: '+sellMoneyAfterTax+'</p>');
   
   var totalTax = buyTax + sellTax;
       $("#result").append('<p>totalTax: '+totalTax+'</p>');
 
-    var earnings = sellMoneyWithTax - buyMoneyWithTax;
+    var earnings = sellMoneyAfterTax - buyMoneyAfterTax;
     $("#result").append('<p>earnings: '+earnings+'</p>');
 	
 	
