@@ -14,36 +14,49 @@
     $(document).ready(function () {
 
       $("#submit").click(function () {
-        $("#result").empty();
+        if ($('.alert')) {
+          $('.alert').remove();
+        }
+        if (!$('input').val()) {
+          $('h2').after(
+
+            '<div class="alert alert-dismissible alert-danger">' +
+            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+            '<strong>Oh snap!</strong> <a href="#" class="alert-link">Error</a> Some fields are empty! .</div>'
+          );
+          return;
+        }
+        $("tbody").empty();
         var money = $("#money").val();
         var buyPrice = $("#buyPrice").val();
         var sellPrice = $("#sellPrice").val();
 
         var numberOfstocks = (money - money / 1000 * 1.74) / buyPrice;
-        $("#result").append('<p>numberOfstocks: ' + numberOfstocks + '</p>');
+        $("tbody").append('<tr class="table-secondary"><th scope="row">Number Of Stocks</th><td> ' + numberOfstocks + '</td></tr>');
 
         var buyTax = money / 1000 * 1.74;
-        $("#result").append('<p>BuyTax: ' + buyTax + '</p>');
+        $("tbody").append('<tr class="table-secondary"><th scope="row">Buy Tax</th><td> ' + buyTax + '</td></tr>');
 
         var buyMoneyAfterTax = (money - money / 1000 * 1.74);
-        $("#result").append('<p>buyMoneyAfterTax: ' + buyMoneyAfterTax + '</p>');
+        $("tbody").append('<tr class="table-secondary"><th scope="row">Buy Money After Tax</th><td> ' + buyMoneyAfterTax + '</td></tr>');
 
         var sellMoneyWithoutTax = numberOfstocks * sellPrice;
         //$("#result").append('<p>sellMoneyWithoutTax: '+sellMoneyWithoutTax+'</p>');
 
         var sellTax = sellMoneyWithoutTax / 1000 * 1.74;
-        $("#result").append('<p>SellTax: ' + sellTax + '</p>');
+        $("tbody").append('<tr class="table-secondary"><th scope="row">Sell Tax</th><td> ' + sellTax + '</td></tr>');
 
 
 
         var sellMoneyAfterTax = (sellMoneyWithoutTax - sellMoneyWithoutTax / 1000 * 1.74);
-        $("#result").append('<p>sellMoneyAfterTax: ' + sellMoneyAfterTax + '</p>');
+        $("tbody").append('<tr class="table-secondary"><th scope="row">Sell Money After Tax</th><td> ' + sellMoneyAfterTax + '</td></tr>');
+
 
         var totalTax = buyTax + sellTax;
-        $("#result").append('<p>totalTax: ' + totalTax + '</p>');
+        $("tbody").append('<tr class="table-secondary"><th scope="row">Total Tax</th><td> ' + totalTax + '</td></tr>');
 
         var earnings = sellMoneyAfterTax - buyMoneyAfterTax;
-        $("#result").append('<p>earnings: ' + earnings + '</p>');
+        $("tbody").append('<tr class="table-secondary"><th scope="row">earnings</th><td> ' + earnings + '</td></tr>');
 
 
       });
@@ -55,24 +68,33 @@
   <div class="container">
     <div class="page-header" id="banner">
       <div class="row">
-        <br/>
-        <br/>
-        <br/>
-        <br/>
+        <br />
+        <br />
+        <br />
+        <br />
         <h2 style="padding-top:1em"> Stocks:</h2>
         <form>
-        Money: <input class="form-control me-sm-2 form-control-lg"  id="money" type="number" /><br /><br />
+          Money: <input class="form-control me-sm-2 form-control-lg" id="money" type="number" /><br /><br />
 
-        buy Price: <input class="form-control me-sm-2 form-control-lg"  id="buyPrice" type="number" /><br><br>
+          buy Price: <input class="form-control me-sm-2 form-control-lg" id="buyPrice" type="number" /><br><br>
 
-        sell Price: <input class="form-control me-sm-2 form-control-lg"  id="sellPrice" type="number" /><br><br>   
-        <p></p>
-        <button id="submit" type="button" class="form-control btn btn-primary  me-sm-2 form-control-lg">Primary</button>
-        <!-- <input class="form-control me-sm-2"  id="submit" type="button" value="Result" /> -->
-        <br />
-        <br />
-        <h1 id="result"></h1>
-      </form>
+          sell Price: <input class="form-control me-sm-2 form-control-lg" id="sellPrice" type="number" /><br><br>
+          <p></p>
+          <button id="submit" type="button"
+            class="form-control btn btn-primary  me-sm-2 form-control-lg">Primary</button>
+          <!-- <input class="form-control me-sm-2"  id="submit" type="button" value="Result" /> -->
+          <br />
+          <br />
+        
+          <table style="font-size: 1.5em;" class="table table-hover">
+            <tbody>
+            </tbody>
+          </table>
+
+          
+
+
+        </form>
       </div>
     </div>
   </div>
