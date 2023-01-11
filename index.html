@@ -91,21 +91,21 @@
         }
         var numberOfstocks = (money - (money / 1000) * 1.74) / buyPrice;
         $("tbody").append(
-          '<tr class="table-secondary"><th scope="row">Number Of Stocks</th><td> ' +
+          '<tr class="table-danger"><th scope="row">Number Of Stocks</th><td> ' +
             round(numberOfstocks) +
             "</td></tr>"
         );
 
         var buyTax = (money / 1000) * 1.74;
         $("tbody").append(
-          '<tr class="table-secondary"><th scope="row">Buy Tax</th><td> ' +
+          '<tr class="table-warning text-secondary"><th scope="row">Buy Tax</th><td> ' +
             round(buyTax) +
             "</td></tr>"
         );
 
         var buyMoneyAfterTax = money - (money / 1000) * 1.74;
         $("tbody").append(
-          '<tr class="table-secondary"><th scope="row">Buy Money After Tax</th><td> ' +
+          '<tr class="table-warning text-secondary"><th scope="row">Buy Money After Tax</th><td> ' +
             round(buyMoneyAfterTax) +
             "</td></tr>"
         );
@@ -115,7 +115,7 @@
 
         var sellTax = (sellMoneyWithoutTax / 1000) * 1.74;
         $("tbody").append(
-          '<tr class="table-secondary"><th scope="row">Sell Tax</th><td> ' +
+          '<tr class="table-success"><th scope="row">Sell Tax</th><td> ' +
             round(sellTax) +
             "</td></tr>"
         );
@@ -123,7 +123,7 @@
         var sellMoneyAfterTax =
           sellMoneyWithoutTax - (sellMoneyWithoutTax / 1000) * 1.74;
         $("tbody").append(
-          '<tr class="table-secondary"><th scope="row">Sell Money After Tax</th><td> ' +
+          '<tr class="table-success"><th scope="row">Sell Money After Tax</th><td> ' +
             round(sellMoneyAfterTax) +
             "</td></tr>"
         );
@@ -137,7 +137,7 @@
 
         var earnings = sellMoneyAfterTax - buyMoneyAfterTax;
         $("tbody").append(
-          '<tr class="table-secondary"><th scope="row">earnings</th><td> ' +
+          '<tr class="table-primary"><th scope="row">Earnings</th><td> ' +
             round(earnings) +
             "</td></tr>"
         );
