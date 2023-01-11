@@ -1,107 +1,147 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Stocks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://bootswatch.com/5/superhero/bootstrap.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://bootswatch.com/_vendor/bootstrap-icons/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://bootswatch.com/_vendor/prismjs/themes/prism-okaidia.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script></script>
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <title>Stocks</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://bootswatch.com/5/superhero/bootstrap.css">
-  <link rel="stylesheet" href="https://bootswatch.com/_vendor/bootstrap-icons/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="https://bootswatch.com/_vendor/prismjs/themes/prism-okaidia.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-  <script>
-
-  </script>
-
-</head>
-
-<body>
-  <div class="container">
-    <div class="page-header" id="banner">
-      <div class="row">
-        <br />
-        <br />
-        <br />
-        <br />
-        <h2 style="padding-top:1em"> Stocks:</h2>
-        <form>
-          Money: <input class="form-control me-sm-2 form-control-lg" id="money" type="number" /><br /><br />
-
-          buy Price: <input class="form-control me-sm-2 form-control-lg" id="buyPrice" type="number" /><br><br>
-
-          sell Price: <input class="form-control me-sm-2 form-control-lg" id="sellPrice" type="number" /><br><br>
-          <p></p>
-          <button id="submit" type="button" class="form-control btn btn-primary form-control-lg">Click</button>
+  <body>
+    <div class="container">
+      <div class="page-header" id="banner">
+        <div class="row">
           <br />
           <br />
+          <br />
+          <br />
+          <h2 style="padding-top: 1em">Stocks:</h2>
+          <form>
+            Money:
+            <input
+              class="form-control me-sm-2 form-control-lg"
+              id="money"
+              type="number"
+            /><br /><br />
 
-          <table style="font-size: 1.5em;" class="table table-hover">
-            <tbody>
-            </tbody>
-          </table>
+            buy Price:
+            <input
+              class="form-control me-sm-2 form-control-lg"
+              id="buyPrice"
+              type="number"
+            /><br /><br />
 
+            sell Price:
+            <input
+              class="form-control me-sm-2 form-control-lg"
+              id="sellPrice"
+              type="number"
+            /><br /><br />
+            <p></p>
+            <button
+              id="submit"
+              type="button"
+              class="form-control btn btn-primary form-control-lg"
+            >
+              Click
+            </button>
+            <br />
+            <br />
 
-
-
-        </form>
+            <table style="font-size: 1.5em" class="table table-hover">
+              <tbody></tbody>
+            </table>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-  <script>
-    document.getElementById("submit").onclick = function () {
-      if ($('.alert')) {
-        $('.alert').remove();
-      }
+    <script>
+      document.getElementById("submit").onclick = function () {
+        function round(num) {
+          return Number(num.toFixed(1));
+        }
+        if ($(".alert")) {
+          $(".alert").remove();
+        }
 
-      $("tbody").empty();
-      var money = $("#money").val();
-      var buyPrice = $("#buyPrice").val();
-      var sellPrice = $("#sellPrice").val();
-      if (!money || !buyPrice || !sellPrice) {
-        $('h2').after(
-
-          '<div class="alert alert-dismissible alert-danger">' +
-          '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-          '<strong>Oh snap!</strong> <a href="#" class="alert-link">Error</a> Some fields are empty! .</div>'
+        $("tbody").empty();
+        var money = $("#money").val();
+        var buyPrice = $("#buyPrice").val();
+        var sellPrice = $("#sellPrice").val();
+        if (!money || !buyPrice || !sellPrice) {
+          $("h2").after(
+            '<div class="alert alert-dismissible alert-danger">' +
+              '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+              '<strong>Oh snap!</strong> <a href="#" class="alert-link">Error</a> Some fields are empty! .</div>'
+          );
+          return;
+        }
+        var numberOfstocks = (money - (money / 1000) * 1.74) / buyPrice;
+        $("tbody").append(
+          '<tr class="table-secondary"><th scope="row">Number Of Stocks</th><td> ' +
+            round(numberOfstocks) +
+            "</td></tr>"
         );
-        return;
-      }
-      var numberOfstocks = (money - money / 1000 * 1.74) / buyPrice;
-      $("tbody").append('<tr class="table-secondary"><th scope="row">Number Of Stocks</th><td> ' +
-        numberOfstocks + '</td></tr>');
 
-      var buyTax = money / 1000 * 1.74;
-      $("tbody").append('<tr class="table-secondary"><th scope="row">Buy Tax</th><td> ' + buyTax +
-        '</td></tr>');
+        var buyTax = (money / 1000) * 1.74;
+        $("tbody").append(
+          '<tr class="table-secondary"><th scope="row">Buy Tax</th><td> ' +
+            round(buyTax) +
+            "</td></tr>"
+        );
 
-      var buyMoneyAfterTax = (money - money / 1000 * 1.74);
-      $("tbody").append('<tr class="table-secondary"><th scope="row">Buy Money After Tax</th><td> ' +
-        buyMoneyAfterTax + '</td></tr>');
+        var buyMoneyAfterTax = money - (money / 1000) * 1.74;
+        $("tbody").append(
+          '<tr class="table-secondary"><th scope="row">Buy Money After Tax</th><td> ' +
+            round(buyMoneyAfterTax) +
+            "</td></tr>"
+        );
 
-      var sellMoneyWithoutTax = numberOfstocks * sellPrice;
-      //$("#result").append('<p>sellMoneyWithoutTax: '+sellMoneyWithoutTax+'</p>');
+        var sellMoneyWithoutTax = numberOfstocks * sellPrice;
+        //$("#result").append('<p>sellMoneyWithoutTax: '+sellMoneyWithoutTax+'</p>');
 
-      var sellTax = sellMoneyWithoutTax / 1000 * 1.74;
-      $("tbody").append('<tr class="table-secondary"><th scope="row">Sell Tax</th><td> ' + sellTax +
-        '</td></tr>');
+        var sellTax = (sellMoneyWithoutTax / 1000) * 1.74;
+        $("tbody").append(
+          '<tr class="table-secondary"><th scope="row">Sell Tax</th><td> ' +
+            round(sellTax) +
+            "</td></tr>"
+        );
 
+        var sellMoneyAfterTax =
+          sellMoneyWithoutTax - (sellMoneyWithoutTax / 1000) * 1.74;
+        $("tbody").append(
+          '<tr class="table-secondary"><th scope="row">Sell Money After Tax</th><td> ' +
+            round(sellMoneyAfterTax) +
+            "</td></tr>"
+        );
 
+        var totalTax = buyTax + sellTax;
+        $("tbody").append(
+          '<tr class="table-secondary"><th scope="row">Total Tax</th><td> ' +
+            round(totalTax) +
+            "</td></tr>"
+        );
 
-      var sellMoneyAfterTax = (sellMoneyWithoutTax - sellMoneyWithoutTax / 1000 * 1.74);
-      $("tbody").append('<tr class="table-secondary"><th scope="row">Sell Money After Tax</th><td> ' +
-        sellMoneyAfterTax + '</td></tr>');
-
-
-      var totalTax = buyTax + sellTax;
-      $("tbody").append('<tr class="table-secondary"><th scope="row">Total Tax</th><td> ' + totalTax +
-        '</td></tr>');
-
-      var earnings = sellMoneyAfterTax - buyMoneyAfterTax;
-      $("tbody").append('<tr class="table-secondary"><th scope="row">earnings</th><td> ' + earnings +
-        '</td></tr>');
-
-    }
-  </script>
-</body>
-
+        var earnings = sellMoneyAfterTax - buyMoneyAfterTax;
+        $("tbody").append(
+          '<tr class="table-secondary"><th scope="row">earnings</th><td> ' +
+            round(earnings) +
+            "</td></tr>"
+        );
+      };
+    </script>
+  </body>
 </html>
