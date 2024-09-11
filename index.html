@@ -22,9 +22,32 @@
         <br />
         <h2 style="padding-top: 1em">Stocks:</h2>
         <form>
-          Money:
-          <input class="form-control me-sm-2 form-control-lg" id="money" type="number" /><br /><br />
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="inputType" id="moneyRadio" value="money" checked>
+            <label class="form-check-label" for="moneyRadio">
+              Money
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="inputType" id="stocksRadio" value="stocks">
+            <label class="form-check-label" for="stocksRadio">
+              Number of Stocks
+            </label>
+          </div>
 
+          <div id="moneyInput" class="mt-3">
+            Money:
+            <input class="form-control me-sm-2 form-control-lg" id="money" type="number" /><br /><br />
+          </div>
+
+          <div id="stocksInput" class="mt-3" style="display: none;">
+            Number of stocks:
+            <input class="form-control me-sm-2 form-control-lg" id="numberOfstocks" type="number" /><br /><br />
+          </div>
+          <!-- Money:
+          <input class="form-control me-sm-2 form-control-lg" id="money" type="number" /><br /><br />
+          Number of stocks:
+          <input class="form-control me-sm-2 form-control-lg" id="numberOfstocks" type="number" /><br /><br /> -->
           buy Price:
           <input class="form-control me-sm-2 form-control-lg" id="buyPrice" type="number" /><br /><br />
 
@@ -47,7 +70,22 @@
     </div>
   </div>
   <script>
+    document.querySelectorAll('input[name="inputType"]').forEach((elem) => {
+      elem.addEventListener('change', function () {
+        const moneyInput = document.getElementById('moneyInput');
+        const stocksInput = document.getElementById('stocksInput');
 
+        if (this.value === 'money') {
+          moneyInput.style.display = 'block';
+          stocksInput.style.display = 'none';
+          document.getElementById('numberOfstocks').value = ''; // Clear the number of stocks input field
+        } else {
+          moneyInput.style.display = 'none';
+          stocksInput.style.display = 'block';
+          document.getElementById('money').value = ''; // Clear the money input field
+        }
+      });
+    });
     $("#tradingCommission").val(1.74);
     document.getElementById("submit").onclick = function () {
       function round(num) {
@@ -58,10 +96,11 @@
       }
       $("tbody").empty();
       var money = $("#money").val();
+      var numberOfstocks = $("#numberOfstocks").val();
       var buyPrice = $("#buyPrice").val();
       var sellPrice = $("#sellPrice").val();
       var tradingCommission = $("#tradingCommission").val();
-      if (!money || !buyPrice || !sellPrice) {
+      if (!buyPrice || !sellPrice) {
         $("h2").after(
           '<div class="alert alert-dismissible alert-danger">' +
           '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
@@ -69,12 +108,30 @@
         );
         return;
       }
-      var numberOfstocks = (money - (money / 1000) * tradingCommission) / buyPrice;
-      $("tbody").append(
-        '<tr class="table-danger"><th scope="row">Number Of Stocks</th><td> ' +
-        round(numberOfstocks) +
-        "</td></tr>"
-      );
+      if (money) {
+        numberOfstocks = (money - (money / 1000) * tradingCommission) / buyPrice;
+        console.log("Number of stocks: ", numberOfstocks);
+        $("tbody").append(
+          '<tr class="table-danger"><th scope="row">Number Of Stocks</th><td> ' +
+          //   round(numberOfstocks) +
+          round(numberOfstocks) +
+          "</td></tr>"
+        );
+      }
+      if (numberOfstocks) {
+        money = calculateMoney(numberOfstocks, buyPrice, tradingCommission)
+        console.log("Money: ", money);
+        $("tbody").append(
+          '<tr class="table-danger"><th scope="row">Money</th><td> ' +
+          //   round(numberOfstocks) +
+          round(money) +
+          "</td></tr>"
+        );
+      }
+
+
+
+
 
       var buyTax = (money / 1000) * tradingCommission;
       $("tbody").append(
@@ -122,6 +179,15 @@
         "</td></tr>"
       );
     };
+    function calculateMoney(numberOfstocks, buyPrice, tradingCommission) {
+      // Calculate the denominator
+      let denominator = 1 - (tradingCommission / 1000);
+
+      // Calculate money
+      let money = (numberOfstocks * buyPrice) / denominator;
+
+      return money;
+    }
   </script>
 </body>
 
