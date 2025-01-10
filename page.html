@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8" />
+    <title>حاسبة الأسهم</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        .profit { color: green; }
+        .loss { color: red; }
+        .hidden { display: none; }
+        .results-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .results-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">حاسبة الأسهم</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="stockForm" class="needs-validation" novalidate>
+                            <!-- نوع الإدخال -->
+                            <div class="mb-4">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inputType" id="moneyRadio" value="money" checked>
+                                    <label class="form-check-label" for="moneyRadio">المبلغ</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inputType" id="stocksRadio" value="stocks">
+                                    <label class="form-check-label" for="stocksRadio">عدد الأسهم</label>
+                                </div>
+                            </div>
+
+                            <!-- حقول الإدخال -->
+                            <div id="moneyInput" class="mb-3">
+                                <label class="form-label">المبلغ:</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="money" step="0.01" >
+                                    <span class="input-group-text">ريال</span>
+                                </div>
+                            </div>
+
+                            <div id="stocksInput" class="mb-3 hidden">
+                                <label class="form-label">عدد الأسهم:</label>
+                                <input type="number" class="form-control" id="numberOfstocks" step="1">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">سعر الشراء:</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="buyPrice" step="0.01" required>
+                                    <span class="input-group-text">ريال</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">سعر البيع:</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="sellPrice" step="0.01" required>
+                                    <span class="input-group-text">ريال</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">العمولة (الراجحي افتراضياً):</label>
+                                <select class="form-select" id="tradingCommissionSelect">
+                                    <option value="1.74">الراجحي (1.74‰)</option>
+                                    <option value="1.55">الأهلي (1.55‰)</option>
+                                    <option value="custom">تخصيص</option>
+                                </select>
+                                <input type="number" class="form-control mt-2 hidden" id="tradingCommission" step="0.01" value="1.74">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">احسب</button>
+                        </form>
+
+                        <!-- النتائج -->
+                        <div id="results" class="mt-4 hidden">
+                            <div class="card results-card">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-4">نتائج الحساب</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // تهيئة العناصر
+            const form = document.getElementById('stockForm');
+            const tradingCommissionSelect = document.getElementById('tradingCommissionSelect');
+            const tradingCommissionInput = document.getElementById('tradingCommission');
+            const resultsDiv = document.getElementById('results');
+
+            // التبديل بين المبلغ وعدد الأسهم
+            document.querySelectorAll('input[name="inputType"]').forEach((elem) => {
+                elem.addEventListener('change', function() {
+                    const moneyInput = document.getElementById('moneyInput');
+                    const stocksInput = document.getElementById('stocksInput');
+                    
+                    if (this.value === 'money') {
+                        moneyInput.classList.remove('hidden');
+                        stocksInput.classList.add('hidden');
+                        document.getElementById('numberOfstocks').value = '';
+                    } else {
+                        moneyInput.classList.add('hidden');
+                        stocksInput.classList.remove('hidden');
+                        document.getElementById('money').value = '';
+                    }
+                });
+            });
+
+            // التحكم في العمولة المخصصة
+            tradingCommissionSelect.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    tradingCommissionInput.classList.remove('hidden');
+                } else {
+                    tradingCommissionInput.classList.add('hidden');
+                    tradingCommissionInput.value = this.value;
+                }
+            });
+
+            // معالجة النموذج
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!this.checkValidity()) {
+                    e.stopPropagation();
+                    this.classList.add('was-validated');
+                    return;
+                }
+
+                calculateResults();
+            });
+
+            function calculateResults() {
+                const money = parseFloat(document.getElementById('money').value) || 0;
+                const numberOfstocks = parseFloat(document.getElementById('numberOfstocks').value) || 0;
+                const buyPrice = parseFloat(document.getElementById('buyPrice').value);
+                const sellPrice = parseFloat(document.getElementById('sellPrice').value);
+                const tradingCommission = parseFloat(tradingCommissionInput.value);
+
+                let results = [];
+                let actualNumberOfStocks = numberOfstocks;
+                let actualMoney = money;
+
+                // حساب عدد الأسهم أو المبلغ
+                if (money) {
+                    // alert("Its Money")
+
+                    actualNumberOfStocks = (money - (money / 1000) * tradingCommission) / buyPrice;
+                    results.push(['عدد الأسهم', actualNumberOfStocks.toFixed(2)]);
+                }
+                if (numberOfstocks) {
+                    // alert("Its number of stocks")
+                    actualMoney = calculateMoney(numberOfstocks, buyPrice, tradingCommission);
+                    results.push(['المبلغ المطلوب', actualMoney.toFixed(2)]);
+                }
+
+                // حسابات الشراء
+                const buyTax = (actualMoney / 1000) * tradingCommission;
+                const buyMoneyAfterTax = actualMoney - buyTax;
+
+                results.push(['عمولة الشراء', buyTax.toFixed(2)]);
+                results.push(['المبلغ بعد عمولة الشراء', buyMoneyAfterTax.toFixed(2)]);
+
+                // حسابات البيع
+                const sellMoneyWithoutTax = actualNumberOfStocks * sellPrice;
+                const sellTax = (sellMoneyWithoutTax / 1000) * tradingCommission;
+                const sellMoneyAfterTax = sellMoneyWithoutTax - sellTax;
+
+                results.push(['عمولة البيع', sellTax.toFixed(2)]);
+                results.push(['المبلغ بعد عمولة البيع', sellMoneyAfterTax.toFixed(2)]);
+
+                // النتائج النهائية
+                const totalTax = buyTax + sellTax;
+                const earnings = sellMoneyAfterTax - buyMoneyAfterTax;
+                const earningsPercentage = (earnings / buyMoneyAfterTax * 100);
+
+                results.push(['إجمالي العمولات', totalTax.toFixed(2)]);
+                results.push(['صافي الربح/الخسارة', earnings.toFixed(2)]);
+                results.push(['نسبة الربح/الخسارة', earningsPercentage.toFixed(2) + '%']);
+
+                // عرض النتائج
+                displayResults(results, earnings);
+            }
+
+            function calculateMoney(numberOfstocks, buyPrice, tradingCommission) {
+                const denominator = 1 - (tradingCommission / 1000);
+                return (numberOfstocks * buyPrice) / denominator;
+            }
+
+            function displayResults(results, earnings) {
+                const tbody = document.querySelector('tbody');
+                tbody.innerHTML = '';
+                
+                results.forEach(([label, value]) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <th scope="row">${label}</th>
+                        <td class="${earnings >= 0 ? 'profit' : 'loss'}">${value}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                resultsDiv.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
